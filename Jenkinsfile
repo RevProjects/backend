@@ -14,7 +14,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/RevProjects/backend.git', credentialsId: "$GIT_CREDENTIALS_ID"
+                git url: 'https://github.com/RevProjects/backend.git', credentialsId: "$GIT_CREDENTIALS_ID"
             }
         }
 
