@@ -9,12 +9,13 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'ec2-user'
         DOCKER_IMAGE = 'projectZeroMRSA'
         GIT_CREDENTIALS_ID = 'git-credentials-id'
+        DOCKER_REGISTRY_URL = 'https://index.docker.io/v1/' // Add your Docker registry URL here
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/RevProjects/backend.git', credentialsId: "$GIT_CREDENTIALS_ID"
+                git url: 'https://github.com/RevProjects/backend.git', branch: 'main', credentialsId: "$GIT_CREDENTIALS_ID"
             }
         }
 
@@ -38,7 +39,7 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                withDockerRegistry([credentialsId: "$DOCKER_CREDENTIALS_ID"]) {
+                withDockerRegistry([url: "$DOCKER_REGISTRY_URL", credentialsId: "$DOCKER_CREDENTIALS_ID"]) {
                     sh 'docker push $DOCKER_IMAGE:$BUILD_NUMBER'
                 }
             }
