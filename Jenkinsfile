@@ -6,56 +6,46 @@ pipeline {
         DB_USERNAME = credentials('db-username')
         DB_PASSWORD = credentials('db-password')
         ADDRESS = credentials('server-address')
-        DOCKER_CREDENTIALS_ID = 'docker-credentials-id'
-        DOCKER_IMAGE = 'your-docker-repo/projectZeroMRSA'
+        DOCKER_CREDENTIALS_ID = 'ec2-user'
+        DOCKER_IMAGE = 'projectZeroMRSA'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/your-repo/projectZeroMRSA.git'
+                git 'https://github.com/RevProjects/backend.git'
             }
         }
 
         stage('Build') {
             steps {
-                script {
-                    sh 'mvn clean package -DskipTests'
-                }
+                sh 'mvn clean package -DskipTests'
             }
         }
 
         stage('Test') {
             steps {
-                script {
-                    sh 'mvn test'
-                }
+                sh 'mvn test'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    sh 'docker build -t $DOCKER_IMAGE:$BUILD_NUMBER .'
-                }
+                sh 'docker build -t $DOCKER_IMAGE:$BUILD_NUMBER .'
             }
         }
 
         stage('Push Docker Image') {
             steps {
-                script {
-                    withDockerRegistry([credentialsId: "$DOCKER_CREDENTIALS_ID"]) {
-                        sh 'docker push $DOCKER_IMAGE:$BUILD_NUMBER'
-                    }
+                withDockerRegistry([credentialsId: "$DOCKER_CREDENTIALS_ID"]) {
+                    sh 'docker push $DOCKER_IMAGE:$BUILD_NUMBER'
                 }
             }
         }
 
         stage('Deploy') {
             steps {
-                script {
-                    sh 'docker run -d -p 8080:8080 $DOCKER_IMAGE:$BUILD_NUMBER'
-                }
+                sh 'docker run -d -p 8080:8080 --env DB_URL=$DB_URL --env DB_USERNAME=$DB_USERNAME --env DB_PASSWORD=$DB_PASSWORD --env ADDRESS=$ADDRESS $DOCKER_IMAGE:$BUILD_NUMBER'
             }
         }
     }
