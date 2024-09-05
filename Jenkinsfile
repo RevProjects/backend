@@ -38,7 +38,7 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                withDockerRegistry([credentialsId: $DOCKER_CREDENTIALS_ID]) {
+                withDockerRegistry([credentialsId: "$DOCKER_CREDENTIALS_ID"]) {
                     sh 'docker push $DOCKER_IMAGE:$BUILD_NUMBER'
                 }
             }
