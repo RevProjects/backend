@@ -8,12 +8,13 @@ pipeline {
         ADDRESS = credentials('server-address')
         DOCKER_CREDENTIALS_ID = 'ec2-user'
         DOCKER_IMAGE = 'projectZeroMRSA'
+        GIT_CREDENTIALS_ID = 'git-credentials-id'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/RevProjects/backend.git'
+                git 'https://github.com/RevProjects/backend.git', credentialsId: "$GIT_CREDENTIALS_ID"
             }
         }
 
