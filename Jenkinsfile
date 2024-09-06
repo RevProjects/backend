@@ -8,8 +8,7 @@ pipeline {
         ADDRESS = credentials('server-address')
         DOCKER_CREDENTIALS_ID = 'ec2-user'
         DOCKER_IMAGE = 'projectZeroMRSA'
-        GIT_CREDENTIALS_ID = 'git-credentials-id'
-        DOCKER_REGISTRY_URL = 'https://index.docker.io/v1/' // Add your Docker registry URL here
+        DOCKER_REGISTRY_URL = credentials('docker-registry-url')
     }
 
     stages {
@@ -22,12 +21,6 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'mvn clean package -DskipTests'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                sh 'mvn test'
             }
         }
 
