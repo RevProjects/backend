@@ -8,6 +8,7 @@ pipeline {
         ADDRESS = credentials('server-address')
         DOCKER_CREDENTIALS_ID = 'ec2-user'
         DOCKER_IMAGE = 'projectZeroMRSA'
+        GIT_CREDENTIALS_ID = 'git-credentials-id'
         DOCKER_REGISTRY_URL = credentials('docker-registry-url')
     }
 
